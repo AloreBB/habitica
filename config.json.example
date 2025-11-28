@@ -13,6 +13,7 @@
   "APPLE_AUTH_PRIVATE_KEY": "",
   "APPLE_TEAM_ID": "",
   "BASE_URL": "http://localhost:3000",
+  "ALLOW_SIGNUP": "true",
   "BLOCKED_IPS": "",
   "CONTENT_SWITCHOVER_TIME_OFFSET": 8,
   "CRON_SAFE_MODE": "false",

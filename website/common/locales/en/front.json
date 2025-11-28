@@ -114,6 +114,7 @@
   "missingUsername": "Missing username.",
   "missingPassword": "Missing password.",
   "missingNewPassword": "Missing new password.",
+  "signupsTemporarilyDisabled": "New account registration is currently disabled.",
   "invalidEmailDomain": "You cannot register with emails with the following domains: <%= domains %>",
   "emailBlockedRegistration": "This E-Mail is blocked from registration. If you think this is a mistake, please contact us at admin@habitica.com.",
   "wrongPassword": "Password is incorrect. If you forgot your password, click \"Forgot Password.\"",

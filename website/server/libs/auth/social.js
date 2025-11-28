@@ -5,6 +5,7 @@ import { BadRequest, NotAuthorized, NotFound } from '../errors';
 import logger from '../logger';
 import {
   generateUsername,
+  isSignupAllowed,
   loginRes,
 } from './utils';
 import { appleProfile } from './apple';
@@ -83,6 +84,10 @@ export async function loginSocial (req, res) { // eslint-disable-line import/pre
 
   if (!existingUser && email) {
     existingUser = await User.findOne({ 'auth.local.email': email }).exec();
+  }
+
+  if (!isSignupAllowed() && !existingUser) {
+    throw new NotAuthorized(res.t('signupsTemporarilyDisabled'));
   }
 
   if (!allowRegister && !existingUser) {
