@@ -109,6 +109,7 @@
     "missingUsername": "Missing username.",
     "missingPassword": "Missing password.",
     "missingNewPassword": "Missing new password.",
+    "signupsTemporarilyDisabled": "New account registration is currently disabled.",
     "invalidEmailDomain": "You cannot register with emails with the following domains: <%= domains %>",
     "wrongPassword": "Password is incorrect. If you forgot your password, click \"Forgot Password.\"",
     "incorrectDeletePhrase": "Please type <%= magicWord %> in all capital letters to delete your account.",

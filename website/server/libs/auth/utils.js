@@ -44,3 +44,11 @@ export function isRestrictedEmailDomain (email) {
   const domain = email.toLowerCase().split('@')[1];
   return RESTRICTED_EMAIL_DOMAINS.includes(domain);
 }
+
+export function isSignupAllowed () {
+  const allowSignup = nconf.get('ALLOW_SIGNUP');
+
+  if (allowSignup === undefined || allowSignup === null) return true;
+
+  return String(allowSignup).toLowerCase() !== 'false';
+}

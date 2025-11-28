@@ -17,7 +17,7 @@ import {
   loginSocial,
   socialEmailToLocal,
 } from './social';
-import { loginRes } from './utils';
+import { isSignupAllowed, loginRes } from './utils';
 import { verifyUsername } from '../user/validation';
 
 const USERNAME_LENGTH_MIN = 1;
@@ -81,6 +81,10 @@ function hasBackupAuth (user, networkToRemove) {
 
 async function registerLocal (req, res, { isV3 = false }) {
   const existingUser = res.locals.user; // If adding local auth to social user
+
+  if (!isSignupAllowed() && !existingUser) {
+    throw new NotAuthorized(res.t('signupsTemporarilyDisabled'));
+  }
 
   req.checkBody({
     username: {
