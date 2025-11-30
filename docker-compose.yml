@@ -1,36 +1,39 @@
-version: "3"
+version: "3.8"
+
 services:
-
-  client:
-    build: .
-    networks:
-      - habitica
-    environment:
-      - BASE_URL=http://server:3000
-    ports:
-        - "8080:8080"
-    command: ["npm", "run", "client:dev"]
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
     depends_on:
-      - server
-
-  server:
-    build: .
+      mongo:
+        condition: service_healthy
+    environment:
+      - NODE_ENV=production
+      - NODE_DB_URI=mongodb://mongo:27017/habitica
+      - BASE_URL=http://localhost:3000
     ports:
       - "3000:3000"
     networks:
       - habitica
-    environment:
-      - NODE_DB_URI=mongodb://mongo/habitrpg
-    depends_on:
-      - mongo
 
   mongo:
-    image: mongo:3.6
-    ports:
-      - "27017:27017"
+    image: mongo:7.0
+    restart: unless-stopped
     networks:
       - habitica
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh --quiet
+      interval: 10s
+      timeout: 30s
+      retries: 5
+      start_period: 20s
 
 networks:
   habitica:
     driver: bridge
+
+volumes:
+  mongo-data:
