@@ -18,3 +18,23 @@ Habitica's code is licensed as described at https://github.com/HabitRPG/habitica
 **Creating a third-party tool?** Please review our [API Usage Guidelines](https://github.com/HabitRPG/habitica/wiki/API-Usage-Guidelines) to ensure that your tool is compliant and maintains the best experience for Habitica players.
 
 **Have any questions about Habitica or contributing?** See the links in the [Habitica](https://habitica.com) website's Help menu. There’s FAQ’s, guides, and the option to reach out to us with any further questions!
+
+## Deploying with Docker Compose
+
+You can run Habitica locally using the included `docker-compose.yml` without installing Node or MongoDB on your machine.
+
+1. Install [Docker](https://docs.docker.com/engine/install/) and [Docker Compose](https://docs.docker.com/compose/install/).
+2. Copy the default configuration:
+
+   ```bash
+   cp config.json.example config.json
+   ```
+
+   Update any values you need (for example `ALLOW_SIGNUP=false` to disable new registrations). Environment variables defined in `docker-compose.yml` override matching values in `config.json`.
+3. Build and start the stack:
+
+   ```bash
+   docker compose up --build
+   ```
+
+   The Habitica web server will be available on http://localhost:3000 and will connect to the bundled MongoDB container automatically.

@@ -1,4 +1,5 @@
 import passport from 'passport';
+import nconf from 'nconf';
 import { v4 as generateUUID } from 'uuid';
 import {
   generateUser,
@@ -74,6 +75,30 @@ describe('POST /user/auth/social', () => {
         code: 404,
         error: 'NotFound',
         message: `${apiErrorMessages.socialFlowUserNotFound} ${user.auth.local.username}+google@example.com`,
+      });
+    });
+
+    context('when signups are disabled', () => {
+      let previousAllowSignup;
+
+      before(() => {
+        previousAllowSignup = nconf.get('ALLOW_SIGNUP');
+        nconf.set('ALLOW_SIGNUP', false);
+      });
+
+      after(() => {
+        nconf.set('ALLOW_SIGNUP', previousAllowSignup);
+      });
+
+      it('rejects new account creation', async () => {
+        await expect(api.post(endpoint, {
+          authResponse: { access_token: randomAccessToken }, // eslint-disable-line camelcase
+          network,
+        })).to.eventually.be.rejected.and.eql({
+          code: 401,
+          error: 'NotAuthorized',
+          message: t('signupsTemporarilyDisabled'),
+        });
       });
     });
 
