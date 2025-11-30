@@ -23,6 +23,9 @@ RUN npm run postinstall \
   && npm run client:build \
   && gulp build:prod
 
+# Trim build-only dependencies before assembling the runtime image
+RUN rm -rf node_modules website/client/node_modules
+
 FROM node:20-bookworm-slim AS runner
 
 ENV NODE_ENV=production
@@ -32,8 +35,8 @@ RUN apt-get update \
 WORKDIR /usr/src/habitica
 
 # Install only production dependencies
-COPY package*.json ./
-COPY website/client/package*.json website/client/
+COPY --from=builder /usr/src/habitica/package*.json ./
+COPY --from=builder /usr/src/habitica/website/client/package*.json website/client/
 RUN npm ci --omit=dev && cd website/client && npm ci --omit=dev
 
 # Bring in the compiled application artifacts
