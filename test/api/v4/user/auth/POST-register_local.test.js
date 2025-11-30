@@ -1,5 +1,6 @@
 import { v4 as uuid } from 'uuid';
 import { each } from 'lodash';
+import nconf from 'nconf';
 import {
   generateUser,
   requester,
@@ -15,6 +16,41 @@ function generateRandomUserName () {
 }
 
 describe('POST /user/auth/local/register', () => {
+  context('when signups are disabled', () => {
+    let api;
+    let previousAllowSignup;
+
+    before(() => {
+      previousAllowSignup = nconf.get('ALLOW_SIGNUP');
+      nconf.set('ALLOW_SIGNUP', false);
+    });
+
+    after(() => {
+      nconf.set('ALLOW_SIGNUP', previousAllowSignup);
+    });
+
+    beforeEach(() => {
+      api = requester();
+    });
+
+    it('prevents creating a new account', async () => {
+      const username = generateRandomUserName();
+      const email = `${username}@example.com`;
+      const password = 'password';
+
+      await expect(api.post('/user/auth/local/register', {
+        username,
+        email,
+        password,
+        confirmPassword: password,
+      })).to.eventually.be.rejected.and.eql({
+        code: 401,
+        error: 'NotAuthorized',
+        message: t('signupsTemporarilyDisabled'),
+      });
+    });
+  });
+
   context('username and email are free', () => {
     let api;
 
