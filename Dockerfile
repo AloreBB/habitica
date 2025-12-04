@@ -37,10 +37,10 @@ WORKDIR /usr/src/habitica
 # Install only production dependencies using the exact lockfiles used during the build
 COPY --from=builder /usr/src/habitica/package*.json ./
 COPY --from=builder /usr/src/habitica/website/client/package*.json website/client/
-RUN npm ci --omit=dev && cd website/client && npm ci --omit=dev
-
-# Remove the npm cache to keep the runtime image lean
-RUN npm cache clean --force
+RUN npm ci --omit=dev \
+  && cd website/client \
+  && npm ci --omit=dev \
+  && npm cache clean --force
 
 # Bring in the compiled application artifacts
 COPY --from=builder /usr/src/habitica .
