@@ -34,7 +34,7 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/*
 WORKDIR /usr/src/habitica
 
-# Install only production dependencies
+# Install only production dependencies using the exact lockfiles used during the build
 COPY --from=builder /usr/src/habitica/package*.json ./
 COPY --from=builder /usr/src/habitica/website/client/package*.json website/client/
 RUN npm ci --omit=dev && cd website/client && npm ci --omit=dev
