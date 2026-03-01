@@ -48,7 +48,15 @@ export function isRestrictedEmailDomain (email) {
 export function isSignupAllowed () {
   const allowSignup = nconf.get('ALLOW_SIGNUP');
 
-  if (allowSignup === undefined || allowSignup === null) return true;
+  if (allowSignup !== undefined && allowSignup !== null) {
+    if (String(allowSignup).toLowerCase() === 'false') return false;
+  }
 
-  return String(allowSignup).toLowerCase() !== 'false';
+  const canRegister = nconf.get('CAN_REGISTER');
+
+  if (canRegister !== undefined && canRegister !== null) {
+    return String(canRegister).toLowerCase() === 'true';
+  }
+
+  return true;
 }
